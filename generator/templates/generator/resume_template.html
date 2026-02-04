@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* PDF Page Setup (For the actual Download) */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* SCREEN PREVIEW STYLING (The "Paper" look) */
+        @media screen {
+            body {
+                background: #e0e0e0; /* Grey background to make the "paper" pop */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 30px;
+            }
+            .page {
+                background: white;
+                width: 210mm; /* A4 Width */
+                min-height: 297mm; /* A4 Height */
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+                margin-bottom: 50px;
+                overflow: hidden;
+            }
+            .no-print {
+                width: 210mm;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* SHARED STYLES (Screen & PDF) */
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333333;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            border-collapse: collapse;
+            min-height: 297mm;
+        }
+
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ffffff;
+            width: 180pt;
+            padding: 30pt 15pt;
+            vertical-align: top;
+        }
+
+        .main {
+            padding: 40pt 30pt;
+            vertical-align: top;
+            background: white;
+        }
+
+        /* Typography */
+        .name { font-size: 28pt; font-weight: bold; color: #2c3e50; margin: 0; }
+        .subtitle { font-size: 12pt; color: #7f8c8d; margin-bottom: 25pt; font-weight: bold; }
+        .section-header {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2pt solid #2c3e50;
+            margin-top: 20pt;
+            margin-bottom: 10pt;
+        }
+
+        /* Navigation Buttons */
+        .no-print {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+        .nav-link {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 15px;
+            padding: 8px 15px;
+            border: 1px solid #4f46e5;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .nav-link:hover { background: #4f46e5; color: white; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .page { box-shadow: none; margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print">
+        <a href="{% url 'dashboard' %}" class="nav-link">← Dashboard</a>
+        <a href="{% url 'search' %}" class="nav-link">New Search</a>
+        <a href="?query={{ emp.emp_id }}&action=download" class="nav-link" style="background:#10b981; color:white; border:none;">Download PDF</a>
+    </div>
+
+    <div class="page">
+        <table class="container">
+            <tr>
+                <td class="sidebar">
+                    <div style="font-size: 14pt; font-weight: bold; color: #3498db; margin-bottom: 10pt;">CONTACT</div>
+                    <div style="font-size: 11pt; color: #bdc3c7; margin-bottom: 5pt;">📧 {{ emp.email }}</div>
+                    <div style="font-size: 11pt; color: #bdc3c7; margin-bottom: 5pt;">📞 {{ emp.phone }}</div>
+                    <div style="font-size: 11pt; color: #bdc3c7;">🆔 {{ emp.emp_id }}</div>
+
+                    <!-- <div style="font-size: 12pt; font-weight: bold; color: #3498db; margin-top: 30pt; margin-bottom: 10pt;">SKILLS</div> -->
+                    <!-- <div style="font-size: 9pt; color: #bdc3c7;">{{ emp.technical_skills }}</div> -->
+                </td>
+
+                <td class="main">
+                    <div class="name">{{ emp.name }}</div>
+                    <div class="subtitle">Professional Resume</div>
+
+                    <div class="section-header">SUMMARY</div>
+                    <div style="font-size: 12pt; text-align: justify;">{{ emp.summary }}</div>
+                    <div class="section-header">SKILLS</div>
+                    <div style="font-size: 12pt; text-align: justify;">{{ emp.technical_skills }}</div> 
+                    <div class="section-header">PROJECTS</div>
+                    {% for item in projects %}
+                    <div style="margin-bottom: 15pt;">
+                        <div style="font-size: 11pt; font-weight: bold; color: #2980b9;">{{ item.project.title }}</div>
+                        <div style="font-size: 9pt; color: #7f8c8d; font-style: italic;">{{ item.role }}</div>
+                        <div style="font-size: 9pt; margin-top: 4pt;">{{ item.project.description }}</div>
+                      
+                     <!-- <div style="font-size: 9pt; color: #bdc3c7;">{{ emp.technical_skills }}</div> -->
+                </td>
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

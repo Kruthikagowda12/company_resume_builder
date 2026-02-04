@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Resume | Resume Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --info: #0ea5e9;
+            --success: #10b981;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-gradient); 
+            height: 100vh; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .card { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 50px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); 
+            text-align: center; 
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover { transform: translateX(-5px); }
+
+        h2 { color: #1f2937; margin-bottom: 10px; font-weight: 600; }
+        p { color: #6b7280; margin-bottom: 30px; font-size: 0.95rem; }
+
+        input { 
+            padding: 15px; 
+            width: 100%; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 12px; 
+            margin-bottom: 25px; 
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button { 
+            padding: 14px; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-view { background: var(--info); }
+        .btn-view:hover { background: #0284c7; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
+
+        .btn-download { background: var(--success); }
+        .btn-download:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
+        /* Icon styling (Unicode characters for simplicity) */
+        .icon { font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <a href="{% url 'dashboard' %}" class="back-link">
+            <span>←</span> &nbsp; Back to Dashboard
+        </a>
+
+        <h2>Resume Generator</h2>
+        <p>Enter details to fetch the professional profile</p>
+
+        <form action="{% url 'generate_resume' %}" method="get">
+            <input type="text" name="query" placeholder="Enter Employee Name or ID..." required>
+            
+            <div class="btn-group">
+                <button type="submit" name="action" value="view" class="btn-view">
+                    <span class="icon">👁️</span> View
+                </button>
+                <button type="submit" name="action" value="download" class="btn-download">
+                    <span class="icon">📥</span> Download
+                </button>
+            </div>
+        </form> 
+    </div>
+</body>
+</html>

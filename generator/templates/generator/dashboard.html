@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Resume Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --danger: #ef4444;
+            --bg: #f9fafb;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            height: 100vh;
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 { font-size: 1.2rem; margin-bottom: 2rem; color: #38bdf8; }
+        .sidebar a { 
+            display: block; 
+            color: #cbd5e1; 
+            text-decoration: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover { background: #334155; color: white; }
+
+        /* Main Content area */
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        /* Grid for Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card h3 { margin-top: 0; font-size: 1.1rem; color: var(--primary); }
+
+        /* Form Styling */
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover { background: var(--primary-hover); }
+
+        /* Table Styling */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f8fafc; padding: 15px; text-align: left; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+        td { padding: 15px; border-top: 1px solid #e5e7eb; }
+
+        .delete-btn {
+            color: var(--danger);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>🚀 Resume Pro</h2>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'search' %}">Search & Generate</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header-flex">
+            <h1>Management Portal</h1>
+            <p style="color: var(--text-muted);">Total Employees: <b>{{ employees.count }}</b></p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>1. Create Employee</h3>
+                <form method="POST"> {% csrf_token %}
+                    <input type="text" name="name" placeholder="Full Name" required>
+                    <input type="text" name="emp_id" placeholder="Employee ID (Unique)" required>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <textarea name="summary" placeholder="Professional Summary" rows="3"></textarea>
+                    <input type="text" name="skills" placeholder="Skills (e.g. Python, Django, SQL)">
+                    <button type="submit" name="create_emp">Save Employee</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>2. Create Project</h3>
+                <form method="POST"> {% csrf_token %}
+                    <input type="text" name="title" placeholder="Project Title" required>
+                    <textarea name="desc" placeholder="Project Description" rows="3"></textarea>
+                    <button type="submit" name="create_project">Save Project</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>3. Project Assignment</h3>
+                <form method="POST"> {% csrf_token %}
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Select Employee</label>
+                    <select name="emp_select">
+                        {% for e in employees %}<option value="{{e.id}}">{{e.name}}</option>{% endfor %}
+                    </select>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Select Project</label>
+                    <select name="proj_select">
+                        {% for p in projects %}<option value="{{p.id}}">{{p.title}}</option>{% endfor %}
+                    </select>
+                    <input type="text" name="role" placeholder="Role (e.g. Frontend Dev)" required>
+                    <button type="submit" name="assign_project" style="background: #10b981;">Link Records</button>
+                </form>
+            </div>
+        </div>
+
+        <h3>Active Personnel</h3>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>ID Number</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in employees %}
+                    <tr>
+                        <td><b>{{ e.name }}</b></td>
+                        <td><code>{{ e.emp_id }}</code></td>
+                        <td>
+                            <a href="{% url 'delete_employee' e.id %}" 
+                               onclick="return confirm('Delete this employee and all linked data?')" 
+                               class="delete-btn">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-muted);">No records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
